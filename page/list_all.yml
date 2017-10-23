@@ -1,0 +1,92 @@
+settings:
+  layout:
+    - html
+    - main
+  title: PageCounter_v1
+content:
+  -
+    type: div
+    attribute:
+      class: row
+    innerHTML:
+      -
+        type: div
+        attribute:
+          class: col-sm-12 table-responsive
+        innerHTML:
+          -
+            type: table
+            attribute:
+              class: table table-condensed
+              id: table_count
+              style: 'font-size:smaller'
+            innerHTML:
+              -
+                type: thead
+                innerHTML:
+                  -
+                    type: tr
+                    innerHTML:
+                      -
+                        type: th
+                        innerHTML: id
+                      -
+                        type: th
+                        innerHTML: session_id
+                      -
+                        type: th
+                        innerHTML: HTTP_HOST
+                      -
+                        type: th
+                        innerHTML: HTTP_USER_AGENT
+                      -
+                        type: th
+                        innerHTML: HTTP_COOKIE
+                      -
+                        type: th
+                        innerHTML: REMOTE_ADDR
+                      -
+                        type: th
+                        innerHTML: HTTP_REFERER
+                      -
+                        type: th
+                        innerHTML: REQUEST_URI
+                      -
+                        type: th
+                        innerHTML: theme
+                      -
+                        type: th
+                        innerHTML: class
+                      -
+                        type: th
+                        innerHTML: method
+                      -
+                        type: th
+                        innerHTML: language
+                      -
+                        type: th
+                        innerHTML: created_at
+              -
+                type: tbody
+                attribute:
+                  id: tbody
+                innerHTML: {}
+      -
+        type: widget
+        data:
+          plugin: datatable/datatable_1_10_16
+          method: run
+          data:
+            id: table_count
+            json:
+              paging: true
+              ordering: true
+              info: true
+              searching: true
+              order:
+                -
+                  - 0
+                  - desc
+              language:
+                url: /plugin/datatable/datatable_1_10_16/i18n/Swedish.json
+    

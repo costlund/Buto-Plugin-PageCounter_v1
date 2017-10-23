@@ -1,0 +1,14 @@
+settings:
+  path: 'container/innerHTML'
+content:
+  navbar:
+    type: div
+    innerHTML: 'yml:/plugin/page/counter_v1/html_object/navbar.yml:content'
+  container:
+    type: div
+    attribute:
+      class: 'container-fluid'
+      style: 'min-height:300px;'
+    innerHTML:
+    
+    
