@@ -17,7 +17,7 @@ content:
               type: button
               class: 'navbar-toggle collapsed'
               data-toggle: collapse
-              data-target: '#bs-example-navbar-collapse-2'
+              data-target: '#abcd'
               aria-expanded: 'false'
             innerHTML:
               0:
@@ -44,6 +44,7 @@ content:
           disabled: false
         attribute:
           class: 'collapse navbar-collapse'
+          id: 'abcd'
         innerHTML:
           -
             type: ul

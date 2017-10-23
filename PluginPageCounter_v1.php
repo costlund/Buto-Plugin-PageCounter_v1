@@ -51,9 +51,11 @@ class PluginPageCounter_v1{
     /**
      * Save.
      */
-    wfPlugin::includeonce('wf/array');
-    $server = new PluginWfArray($_SERVER);
-    $this->sqlite->exec("insert into page (session_id,HTTP_HOST,HTTP_USER_AGENT,HTTP_REFERER,HTTP_COOKIE,REMOTE_ADDR,REQUEST_URI,theme,class,method,language) values ('".session_id()."','".$server->get('HTTP_HOST')."','".$server->get('HTTP_USER_AGENT')."','".$server->get('HTTP_REFERER')."','".$server->get('HTTP_COOKIE')."','".$server->get('REMOTE_ADDR')."','".$server->get('REQUEST_URI')."','".wfArray::get($GLOBALS, 'sys/theme')."','".wfArray::get($GLOBALS, 'sys/class')."','".wfArray::get($GLOBALS, 'sys/method')."','".wfI18n::getLanguage()."')");
+    if(wfArray::get($GLOBALS, 'sys/plugin') != 'page/counter_v1'){
+      wfPlugin::includeonce('wf/array');
+      $server = new PluginWfArray($_SERVER);
+      $this->sqlite->exec("insert into page (session_id,HTTP_HOST,HTTP_USER_AGENT,HTTP_REFERER,HTTP_COOKIE,REMOTE_ADDR,REQUEST_URI,theme,class,method,language) values ('".session_id()."','".$server->get('HTTP_HOST')."','".$server->get('HTTP_USER_AGENT')."','".$server->get('HTTP_REFERER')."','".$server->get('HTTP_COOKIE')."','".$server->get('REMOTE_ADDR')."','".$server->get('REQUEST_URI')."','".wfArray::get($GLOBALS, 'sys/theme')."','".wfArray::get($GLOBALS, 'sys/class')."','".wfArray::get($GLOBALS, 'sys/method')."','".wfI18n::getLanguage()."')");
+    }
     return null;
   }
   private function init_page(){
@@ -80,7 +82,7 @@ class PluginPageCounter_v1{
   public function page_list_all(){
     $this->init_page();
     $this->sqlite->open();
-    $rs = $this->sqlite->query("select * from page order by created_at desc;");
+    $rs = $this->sqlite->query("select id, session_id, HTTP_HOST, HTTP_USER_AGENT, HTTP_COOKIE, REMOTE_ADDR, HTTP_REFERER, REQUEST_URI, theme, class, method, language, datetime(created_at, 'localtime') as created_at from page order by created_at desc;");
     $tr = array();
     foreach ($rs as $key => $value){
       $item = new PluginWfArray($value);
@@ -97,7 +99,7 @@ class PluginPageCounter_v1{
           wfDocument::createHtmlElement('td', $item->get('class')),
           wfDocument::createHtmlElement('td', $item->get('method')),
           wfDocument::createHtmlElement('td', $item->get('language')),
-          wfDocument::createHtmlElement('td', $item->get('created_at'))
+          wfDocument::createHtmlElement('td', date('ymd H:i', strtotime($item->get('created_at'))))
           ));
     }
     $page = $this->getYml('page/list_all.yml');
@@ -143,7 +145,7 @@ class PluginPageCounter_v1{
   public function page_list_group_by_day(){
     $this->init_page();
     $this->sqlite->open();
-    $rs = $this->sqlite->query("select substr(created_at, 1, 10) as day, count(id) as hits from page group by day;");
+    $rs = $this->sqlite->query("select substr(datetime(created_at, 'localtime'), 1, 10) as day, count(id) as hits from page group by day;");
     $tr = array();
     foreach ($rs as $key => $value){
       $item = new PluginWfArray($value);
@@ -159,7 +161,7 @@ class PluginPageCounter_v1{
   public function page_list_group_by_day_and_ip(){
     $this->init_page();
     $this->sqlite->open();
-    $rs = $this->sqlite->query("select substr(created_at, 1, 10) as day, REMOTE_ADDR, count(id) as hits from page group by day, REMOTE_ADDR;");
+    $rs = $this->sqlite->query("select substr(datetime(created_at, 'localtime'), 1, 10) as day, REMOTE_ADDR, count(id) as hits from page group by day, REMOTE_ADDR;");
     $tr = array();
     foreach ($rs as $key => $value){
       $item = new PluginWfArray($value);
